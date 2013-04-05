@@ -26,6 +26,39 @@ typedef struct {
 static void ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
+    
+    
+static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
+  ngx_x_rid_header_add_variables,     /* preconfiguration */
+  NULL,                               /* postconfiguration */
+
+  NULL,        /* create main configuration */
+  NULL,        /* init main configuration */
+            
+  NULL,        /* create server configuration */
+  NULL,        /* merge server configuration */
+            
+  ngx_x_rid_header_create_conf,             /* create location configuration */
+  ngx_x_rid_header_merge_conf               /* merge location configuration */
+};                        
+
+
+                      
+ngx_module_t  ngx_x_rid_header_module = {
+  NGX_MODULE_V1,
+  &ngx_x_rid_header_module_ctx,      /* module context */
+  ngx_x_rid_header_module_commands,  /* module directives */
+  NGX_HTTP_MODULE,                   /* module type */
+  NULL,                              /* init master */              
+  NULL,                              /* init module */              
+  NULL,                              /* init process */             
+  NULL,                              /* init thread */              
+  NULL,                              /* exit thread */              
+  NULL,                              /* exit process */             
+  NULL,                              /* exit master */              
+  NGX_MODULE_V1_PADDING   
+};
+
 
 ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable_value_t *v, uintptr_t data) {
     
@@ -138,34 +171,5 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 }
 
                
-static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
-  ngx_x_rid_header_add_variables,     /* preconfiguration */
-  NULL,                               /* postconfiguration */
 
-  NULL,        /* create main configuration */
-  NULL,        /* init main configuration */
-            
-  NULL,        /* create server configuration */
-  NULL,        /* merge server configuration */
-            
-  ngx_x_rid_header_create_conf,             /* create location configuration */
-  ngx_x_rid_header_merge_conf               /* merge location configuration */
-};                        
-
-
-                      
-ngx_module_t  ngx_x_rid_header_module = {
-  NGX_MODULE_V1,
-  &ngx_x_rid_header_module_ctx,      /* module context */
-  ngx_x_rid_header_module_commands,  /* module directives */
-  NGX_HTTP_MODULE,                   /* module type */
-  NULL,                              /* init master */              
-  NULL,                              /* init module */              
-  NULL,                              /* init process */             
-  NULL,                              /* init thread */              
-  NULL,                              /* exit thread */              
-  NULL,                              /* exit process */             
-  NULL,                              /* exit master */              
-  NGX_MODULE_V1_PADDING   
-};
 
