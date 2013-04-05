@@ -27,6 +27,8 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf);    
+static char *
+ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 
 static ngx_str_t  ngx_x_rid_header_variable_name = ngx_string("request_id");
 
@@ -43,9 +45,9 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
       { ngx_string("uuid_name"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
                         |NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
+      ngx_x_rid_header_set_name,
       NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_x_rid_header_conf_t,name),
+      0,
       NULL },
       
       ngx_null_command
@@ -178,5 +180,24 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 }
 
                
+static char *
+ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
+    ngx_http_log_loc_conf_t *llcf = conf;
 
+    ngx_str_t   *value;
+    
+    if (cf->cmd_type != NGX_HTTP_MAIN_CONF) {
+        ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                           "the \"uuid_name\" directive may be used "
+                           "only on \"http\" level");
+    }
+
+    if (llcf->name != NGX_CONF_UNSET_PTR) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+    llcf->name = url = &value[1];
+    return NGX_CONF_OK;
+}
 
