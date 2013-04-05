@@ -1,0 +1,2 @@
+
+./configure --prefix=/opt/openresty  --with-luajit  --with-http_iconv_module   -j2   --add-module=/home/leon/nginx-x-rid-header --with-ld-opt="-luuid"
