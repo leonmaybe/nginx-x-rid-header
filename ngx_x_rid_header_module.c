@@ -158,7 +158,7 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_x_rid_header_conf_t *conf = child;
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
-    ngx_conf_merge_value(conf->name, prev->name, 0);
+    ngx_conf_merge_value(conf->name, prev->name, ngx_x_rid_header_variable_name);
 
 
     return NGX_CONF_OK;
