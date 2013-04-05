@@ -40,6 +40,14 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
       offsetof(ngx_x_rid_header_conf_t,enable),
       NULL },
       
+      { ngx_string("uuid_name"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
+                        |NGX_CONF_FLAG,
+      ngx_conf_set_flag_slot,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      offsetof(ngx_x_rid_header_conf_t,name),
+      NULL },
+      
       ngx_null_command
 };
     
