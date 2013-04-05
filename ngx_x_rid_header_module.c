@@ -182,7 +182,7 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
                
 static char *
 ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
-    ngx_http_log_loc_conf_t *llcf = conf;
+    ngx_x_rid_header_conf_t *llcf = conf;
 
     ngx_str_t   *value;
     
