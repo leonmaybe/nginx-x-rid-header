@@ -26,7 +26,22 @@ typedef struct {
 static void ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
-    
+static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf);    
+
+static ngx_str_t  ngx_x_rid_header_variable_name = ngx_string("request_id");
+
+static ngx_command_t ngx_x_rid_header_module_commands[] = {
+
+    { ngx_string("uuid"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
+                        |NGX_CONF_FLAG,
+      ngx_conf_set_flag_slot,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      offsetof(ngx_x_rid_header_conf_t,enbale),
+      NULL },
+      
+      ngx_null_command
+};
     
 static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
   ngx_x_rid_header_add_variables,     /* preconfiguration */
@@ -109,21 +124,7 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
   return NGX_OK;
 }   
                                   
-static ngx_str_t  ngx_x_rid_header_variable_name = ngx_string("request_id");
-static ngx_flag_t           enable;
 
-static ngx_command_t ngx_x_rid_header_module_commands[] = {
-
-    { ngx_string("uuid"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
-                        |NGX_CONF_FLAG,
-      ngx_conf_set_flag_slot,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_x_rid_header_conf_t,enbale),
-      NULL },
-      
-      ngx_null_command
-};
 
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
 {
