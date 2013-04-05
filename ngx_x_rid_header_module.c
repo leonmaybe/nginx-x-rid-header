@@ -197,7 +197,7 @@ ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
         return "is duplicate";
     }
 
-    clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_x_rid_header_conf_t);
+    clcf = ngx_http_conf_get_module_main_conf(cf, ngx_x_rid_header_conf_t);
     llcf->name = clcf->name;
     return NGX_CONF_OK;
 }
