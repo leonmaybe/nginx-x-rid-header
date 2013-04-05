@@ -147,15 +147,15 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
     }
 
     conf->enable = NGX_CONF_UNSET;
-    conf->name = NGX_CONF_UNSET;
+    //conf->name = NGX_CONF_UNSET;
     return conf;
 }
 
 static char *
 ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 {
-    ngx_http_gzip_conf_t *prev = parent;
-    ngx_http_gzip_conf_t *conf = child;
+    ngx_x_rid_header_conf_t *prev = parent;
+    ngx_x_rid_header_conf_t *conf = child;
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     ngx_conf_merge_value(conf->no_buffer, prev->no_buffer, 0);
