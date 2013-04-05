@@ -28,6 +28,13 @@ static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
 
 ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable_value_t *v, uintptr_t data) {
+    
+     ngx_x_rid_header_conf_t *conf;
+    conf = ngx_http_get_module_loc_conf(r, ngx_x_rid_header_module);
+  if(!conf->enable) {
+    return NGX_OK;  
+  }
+    
   u_char *p;     
 
   p = ngx_pnalloc(r->pool, 37);
@@ -87,11 +94,7 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
 
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
 {
-    ngx_x_rid_header_conf_t *conf;
-    conf = ngx_http_get_module_loc_conf(r, ngx_http_gzip_filter_module);
-  if(!conf->enable) {
-    return NGX_OK;  
-  }
+   
   ngx_http_variable_t* var = ngx_http_add_variable(cf, &ngx_x_rid_header_variable_name, NGX_HTTP_VAR_NOHASH);
   if (var == NULL) {
       return NGX_ERROR;
@@ -100,9 +103,18 @@ static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
   return NGX_OK;
 }
 
-static void ngx_x_rid_header_create_conf(ngx_conf_t *cf)
+static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
 {
-    enable = NGX_CONF_UNSET;
+    ngx_x_rid_header_conf_t  *conf;
+
+    conf = ngx_pcalloc(cf->pool, sizeof(ngx_x_rid_header_conf_t));
+    if (conf == NULL) {
+        return NULL;
+    }
+
+    conf->enable = NGX_CONF_UNSET;
+    conf->name = NGX_CONF_UNSET;
+    return conf;
 }
 
 static char *
