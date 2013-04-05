@@ -17,6 +17,12 @@
 //
 // * make the name of the variable configurable
 
+typedef struct {
+    ngx_flag_t     enable;
+    ngx_str_t      name;
+} ngx_x_rid_header_conf_t;
+
+
 static void ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
@@ -73,7 +79,7 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
                         |NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
-      0
+      offsetof(ngx_x_rid_header_conf_t,enbale),
       NULL },
       
       ngx_null_command
@@ -81,7 +87,9 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
 
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
 {
-  if(!enable) {
+    ngx_x_rid_header_conf_t *conf;
+    conf = ngx_http_get_module_loc_conf(r, ngx_http_gzip_filter_module);
+  if(!conf->enable) {
     return NGX_OK;  
   }
   ngx_http_variable_t* var = ngx_http_add_variable(cf, &ngx_x_rid_header_variable_name, NGX_HTTP_VAR_NOHASH);
