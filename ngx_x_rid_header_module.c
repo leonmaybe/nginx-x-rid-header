@@ -184,8 +184,8 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 static char *
 ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
     ngx_x_rid_header_conf_t *llcf = conf;
-
-    ngx_str_t   *value;
+    ngx_x_rid_header_conf_t *clcf;
+    
     
     if (cf->cmd_type != NGX_HTTP_MAIN_CONF) {
         ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
@@ -197,8 +197,8 @@ ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
         return "is duplicate";
     }
 
-    value = cf->args->elts;
-    llcf->name = value[1];
+    clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_x_rid_header_conf_t);
+    llcf->name = clcf->name;
     return NGX_CONF_OK;
 }
 
