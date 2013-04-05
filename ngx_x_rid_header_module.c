@@ -159,8 +159,8 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
         return NULL;
     }
 
-    conf->enable = NGX_CONF_UNSET;
-    //ngx_str_set(&conf->name, &ngx_x_rid_header_variable_name);
+    conf->enable = 0;
+    conf->name = ngx_null_string();
     
     return conf;
 }
