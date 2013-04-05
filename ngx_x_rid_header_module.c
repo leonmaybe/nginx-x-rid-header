@@ -37,7 +37,7 @@ static ngx_command_t ngx_x_rid_header_module_commands[] = {
                         |NGX_CONF_FLAG,
       ngx_conf_set_flag_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_x_rid_header_conf_t,enbale),
+      offsetof(ngx_x_rid_header_conf_t,enable),
       NULL },
       
       ngx_null_command
