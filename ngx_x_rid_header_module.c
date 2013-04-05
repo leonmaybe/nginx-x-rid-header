@@ -23,7 +23,7 @@ typedef struct {
 } ngx_x_rid_header_conf_t;
 
 
-static void ngx_x_rid_header_create_conf(ngx_conf_t *cf);
+static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf);    
@@ -160,13 +160,6 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     ngx_conf_merge_value(conf->no_buffer, prev->no_buffer, 0);
 
-    if (ngx_http_merge_types(cf, &conf->types_keys, &conf->types,
-                             &prev->types_keys, &prev->types,
-                             ngx_http_html_default_types)
-        != NGX_OK)
-    {
-        return NGX_CONF_ERROR;
-    }
 
     return NGX_CONF_OK;
 }
