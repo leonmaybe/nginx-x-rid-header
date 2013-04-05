@@ -160,7 +160,7 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
     }
 
     conf->enable = NGX_CONF_UNSET;
-    conf->name = ngx_null_string;
+    //conf->name = ngx_null_string;
     
     return conf;
 }
@@ -175,7 +175,7 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
     
     lcf = ngx_http_conf_get_module_main_conf(cf, ngx_x_rid_header_module);
-     conf->name = lcf->name);
+     conf->name = lcf->name;
      
     return NGX_CONF_OK;
 }
@@ -198,7 +198,7 @@ ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
     }
 
     value = cf->args->elts;
-    llcf->name = ngx_string(&value[1]);
+    llcf->name = ngx_string(value[1]);
     return NGX_CONF_OK;
 }
 
