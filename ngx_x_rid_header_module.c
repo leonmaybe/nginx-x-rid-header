@@ -160,7 +160,6 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
     }
 
     conf->enable = NGX_CONF_UNSET;
-    conf->name = NULL;
     //ngx_str_set(&conf->name, &ngx_x_rid_header_variable_name);
     
     return conf;
@@ -194,7 +193,7 @@ ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
                            "only on \"http\" level");
     }
 
-    if (llcf->name != NULL) {
+    if (llcf->name.len > 0) {
         return "is duplicate";
     }
 
