@@ -128,8 +128,10 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
 
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
 {
+     ngx_x_rid_header_conf_t *conf;
+   conf = ngx_http_conf_get_module_main_conf(cf, ngx_x_rid_header_module);
    
-  ngx_http_variable_t* var = ngx_http_add_variable(cf, &ngx_x_rid_header_variable_name, NGX_HTTP_VAR_NOHASH);
+  ngx_http_variable_t* var = ngx_http_add_variable(cf, &conf->name, NGX_HTTP_VAR_NOHASH);
   if (var == NULL) {
       return NGX_ERROR;
   }
@@ -147,7 +149,8 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
     }
 
     conf->enable = NGX_CONF_UNSET;
-    //conf->name = NGX_CONF_UNSET;
+    ngx_str_set(&conf->name, ngx_x_rid_header_variable_name);
+    
     return conf;
 }
 
@@ -156,11 +159,13 @@ ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 {
     ngx_x_rid_header_conf_t *prev = parent;
     ngx_x_rid_header_conf_t *conf = child;
+    ngx_x_rid_header_conf_t *lcf;
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
-    //ngx_conf_merge_value(conf->name, prev->name, ngx_x_rid_header_variable_name);
-
-
+    
+    lcf = ngx_http_conf_get_module_main_conf(cf, ngx_x_rid_header_module);
+     ngx_str_set(&conf->name, lcf->name);
+     
     return NGX_CONF_OK;
 }
 
