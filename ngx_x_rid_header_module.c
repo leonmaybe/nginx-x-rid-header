@@ -5,11 +5,11 @@
 
 #if (NGX_FREEBSD)
 #error FreeBSD is not supported yet, sorry.
-#elif (NGX_LINUX)
+#elif (NGX_DARWIN)
 #include <uuid.h>      
 #elif (NGX_SOLARIS)
 #error Solaris is not supported yet, sorry.
-#elif (NGX_DARWIN)
+#elif (NGX_LINUX)
 #include <uuid/uuid.h>      
 #endif
 
@@ -31,7 +31,7 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
       
 #if (NGX_FREEBSD)
 #error FreeBSD is not supported yet, sorry.
-#elif (NGX_LINUX)
+#elif (NGX_DARWIN)
   uuid_t* uuid;
   if ( uuid_create(&uuid) ) {
     return -1;
@@ -48,7 +48,7 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
   uuid_destroy(uuid);
 #elif (NGX_SOLARIS)
 #error Solaris is not supported yet, sorry.
-#elif (NGX_DARWIN)
+#elif (NGX_LINUX)
   uuid_t uuid;
   uuid_generate(uuid);       
   uuid_unparse_lower(uuid, (char*)p);
@@ -132,9 +132,7 @@ static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
   ngx_x_rid_header_merge_conf               /* merge location configuration */
 };                        
 
-static ngx_command_t  ngx_x_rid_header_module_commands[] = {
-  ngx_null_command
-};
+
                       
 ngx_module_t  ngx_x_rid_header_module = {
   NGX_MODULE_V1,
