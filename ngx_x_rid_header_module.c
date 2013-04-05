@@ -17,6 +17,10 @@
 //
 // * make the name of the variable configurable
 
+static void ngx_x_rid_header_create_conf(ngx_conf_t *cf);
+static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
+    void *parent, void *child);
+
 ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable_value_t *v, uintptr_t data) {
   u_char *p;     
 
@@ -60,9 +64,26 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
 }   
                                   
 static ngx_str_t  ngx_x_rid_header_variable_name = ngx_string("request_id");
+static ngx_flag_t           enable;
+
+static ngx_command_t ngx_x_rid_header_module_commands[] = {
+
+    { ngx_string("uuid"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
+                        |NGX_CONF_FLAG,
+      ngx_conf_set_flag_slot,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      0
+      NULL },
+      
+      ngx_null_command
+};
 
 static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
 {
+  if(!enable) {
+    return NGX_OK;  
+  }
   ngx_http_variable_t* var = ngx_http_add_variable(cf, &ngx_x_rid_header_variable_name, NGX_HTTP_VAR_NOHASH);
   if (var == NULL) {
       return NGX_ERROR;
@@ -70,6 +91,32 @@ static ngx_int_t ngx_x_rid_header_add_variables(ngx_conf_t *cf)
   var->get_handler = ngx_x_rid_header_get_variable;
   return NGX_OK;
 }
+
+static void ngx_x_rid_header_create_conf(ngx_conf_t *cf)
+{
+    enable = NGX_CONF_UNSET;
+}
+
+static char *
+ngx_x_rid_header_merge_conf(ngx_conf_t *cf, void *parent, void *child)
+{
+    ngx_http_gzip_conf_t *prev = parent;
+    ngx_http_gzip_conf_t *conf = child;
+
+    ngx_conf_merge_value(conf->enable, prev->enable, 0);
+    ngx_conf_merge_value(conf->no_buffer, prev->no_buffer, 0);
+
+    if (ngx_http_merge_types(cf, &conf->types_keys, &conf->types,
+                             &prev->types_keys, &prev->types,
+                             ngx_http_html_default_types)
+        != NGX_OK)
+    {
+        return NGX_CONF_ERROR;
+    }
+
+    return NGX_CONF_OK;
+}
+
                
 static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
   ngx_x_rid_header_add_variables,     /* preconfiguration */
@@ -81,8 +128,8 @@ static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
   NULL,        /* create server configuration */
   NULL,        /* merge server configuration */
             
-  NULL,        /* create location configuration */
-  NULL         /* merge location configuration */
+  ngx_x_rid_header_create_conf,             /* create location configuration */
+  ngx_x_rid_header_merge_conf               /* merge location configuration */
 };                        
 
 static ngx_command_t  ngx_x_rid_header_module_commands[] = {
