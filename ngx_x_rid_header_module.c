@@ -23,6 +23,7 @@ typedef struct {
 } ngx_x_rid_header_conf_t;
 
 
+static void * ngx_x_rid_header_main_conf(ngx_conf_t *cf);
 static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf);
 static char *ngx_x_rid_header_merge_conf(ngx_conf_t *cf,
     void *parent, void *child);
@@ -57,7 +58,7 @@ static ngx_http_module_t  ngx_x_rid_header_module_ctx = {
   ngx_x_rid_header_add_variables,     /* preconfiguration */
   NULL,                               /* postconfiguration */
 
-  NULL,        /* create main configuration */
+  ngx_x_rid_header_main_conf,        /* create main configuration */
   NULL,        /* init main configuration */
             
   NULL,        /* create server configuration */
@@ -159,7 +160,8 @@ static void * ngx_x_rid_header_create_conf(ngx_conf_t *cf)
     }
 
     conf->enable = NGX_CONF_UNSET;
-    ngx_str_set(&conf->name, &ngx_x_rid_header_variable_name);
+    conf->name = NULL;
+    //ngx_str_set(&conf->name, &ngx_x_rid_header_variable_name);
     
     return conf;
 }
@@ -192,12 +194,22 @@ ngx_x_rid_header_set_name(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
                            "only on \"http\" level");
     }
 
-    if (llcf->name != NGX_CONF_UNSET_PTR) {
+    if (llcf->name != NULL) {
         return "is duplicate";
     }
 
     value = cf->args->elts;
-    llcf->name = url = &value[1];
+    llcf->name = &value[1];
     return NGX_CONF_OK;
 }
+
+static void *
+ngx_x_rid_header_main_conf(ngx_conf_t *cf)
+{
+    ngx_x_rid_header_conf_t  *conf;
+    //conf->enable = 0;
+    ngx_str_set(&conf->name, &ngx_x_rid_header_variable_name);
+    return conf;
+}
+
 
