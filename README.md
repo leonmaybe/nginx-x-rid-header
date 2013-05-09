@@ -2,7 +2,6 @@ TODO
 =======
 1) need to fix var name. now just use commit/0f1c1d18021dca31eccbad2544a48b78dd8dec0c
 
-2）Not work in centos. just use under ubuntu
 
 OVERVIEW
 =======
@@ -28,6 +27,8 @@ USAGE
         listen       80;
         server_name  example.com;
         location / {
+            #Notice here. can use under diff location
+            uuid on;  
             proxy_set_header x-exampledotcom-rid $request_id;
             proxy_pass   http://localhost:8080;
         }
