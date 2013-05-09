@@ -1,0 +1,5 @@
+
+yum install  uuid-devel libuuid-devel
+
+./configure --prefix=/opt/nginx  --user=www --group=www   --add-module=/source/nginx-x-rid-header --with-http_stub_status_module --with-http_ssl_module  --with-ld-opt=-luuid
+
